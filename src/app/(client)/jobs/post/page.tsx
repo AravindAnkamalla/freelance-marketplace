@@ -34,7 +34,7 @@ export default function PostJobPage() {
       setDescription('');
       setBudget('');
       setRequiredSkills('');
-      router.push('/client/jobs');
+      router.push('/jobs');
     },
    
     onError: (error: any) => {

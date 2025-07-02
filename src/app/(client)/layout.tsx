@@ -29,11 +29,11 @@ export default async function ClientLayout({
   }
 
   const clientNav = (
-    <nav className="bg-blue-700 text-white p-4 shadow-md">
-      <ul className="flex space-x-4 container mx-auto">
+    <nav className="bg-blue-500 text-white p-4 shadow-md">
+      <ul className="flex space-x-8 container mx-auto">
         <li><a href="/dashboard" className="hover:underline">Dashboard</a></li>
         <li><a href="/jobs/post" className="hover:underline">Post a Job</a></li>
-        <li><a href="/jobs" className="hover:underline">My Jobs</a></li>
+        <li><a href="/dashboard/my-jobs" className="hover:underline">My Jobs</a></li>
         <li><a href="/profile" className="hover:underline">Profile</a></li> 
         <li><a href="/sign-out" className="hover:underline">Sign Out</a></li> 
       </ul>
