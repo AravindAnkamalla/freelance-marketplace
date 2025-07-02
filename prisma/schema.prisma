@@ -1,15 +1,85 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum JobStatus {
+  OPEN
+  AWARDED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum ProposalStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum UserRole {
+  CLIENT
+  FREELANCER
+  ADMIN
+}
+
+model User {
+  id             String   @id @default(cuid())
+  clerkId        String   @unique
+  email          String   @unique
+  name           String?
+  role           UserRole
+  profilePicture String?
+  bio            String?
+  skills         String[]
+  hourlyRate     Float?
+  balance        Float    @default(0)
+
+  postedJobs   Job[]      @relation("ClientJobs")
+  proposals    Proposal[] @relation("FreelancerProposals")
+  assignedJobs Job[]      @relation("AssignedFreelancerJob")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Job {
+  id             String    @id @default(cuid())
+  title          String
+  description    String
+  budget         Float
+  requiredSkills String[]
+  deadline       DateTime?
+  status         JobStatus @default(OPEN)
+
+  clientId String
+  client   User   @relation("ClientJobs", fields: [clientId], references: [id])
+
+  assignedFreelancerId String?
+  assignedFreelancer   User?   @relation("AssignedFreelancerJob", fields: [assignedFreelancerId], references: [id])
+
+  proposals Proposal[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Proposal {
+  id            String         @id @default(cuid())
+  jobId         String
+  job           Job            @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  freelancerId  String
+  freelancer    User           @relation("FreelancerProposals", fields: [freelancerId], references: [id], onDelete: Cascade)
+  coverLetter   String
+  proposedPrice Float
+  status        ProposalStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
