@@ -20,7 +20,7 @@ export async function GET(req: Request) {
         id: true,
       },
     });
-    console.log(userId);
+   
     const clientJobs = await prisma.job.findMany({
       where: {
         clientId: client?.id,
@@ -29,7 +29,6 @@ export async function GET(req: Request) {
         createdAt: "desc",
       },
     });
-    console.log(clientJobs);
 
     return NextResponse.json(clientJobs);
   } catch (error) {

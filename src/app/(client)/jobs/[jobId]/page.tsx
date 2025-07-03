@@ -1,4 +1,4 @@
-// src/app/(client)/jobs/[jobId]/page.tsx
+
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/db';
@@ -13,7 +13,6 @@ interface JobDetailsPageProps {
 export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
   const  jobId  = params.jobId;
 
-  // 1. Server-side authentication and authorization
   const clerkUser = await currentUser();
   if (!clerkUser) {
     redirect('/sign-in');
@@ -24,10 +23,10 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
   });
 
   if (!dbUser || dbUser.role !== UserRole.CLIENT) {
-    redirect('/dashboard'); // Or an unauthorized page
+    redirect('/dashboard'); 
   }
 
-  // 2. Fetch the specific job from the database
+
   const job = await prisma.job.findUnique({
     where: {
       id: jobId,
@@ -41,13 +40,13 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
       <div className="container mx-auto p-6 text-center text-red-600">
         <h1 className="text-3xl font-bold mb-4">Job Not Found or Unauthorized Access</h1>
         <p>The job you are looking for does not exist or you do not have permission to view it.</p>
-        <a href="/client/jobs" className="mt-4 inline-block text-blue-600 hover:underline">Back to My Jobs</a>
+        <a href="/my-jobs" className="mt-4 inline-block text-blue-600 hover:underline">Back to My Jobs</a>
       </div>
     );
   }
 
   return (
-    <main className="container mx-auto p-6">
+    <main className="container m-auto p-6">
       <div className="bg-white rounded-lg shadow-md p-8 border border-gray-200">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">{job.title}</h1>
         <p className="text-gray-700 mb-6">{job.description}</p>

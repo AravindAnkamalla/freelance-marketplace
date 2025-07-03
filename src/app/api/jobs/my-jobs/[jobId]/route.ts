@@ -55,7 +55,7 @@ export async function PATCH(
   { params }: { params: { jobId: string } }
 ) {
   try {
-    const jobId = params.jobId;
+    const jobId = await params.jobId;
     const { userId } = await auth();
 
     if (!userId) {
@@ -118,7 +118,7 @@ export async function GET(
   req: Request,
   { params }: { params: { jobId: string } }
 ) {
-  const jobId  = params.jobId;
+  const jobId  = await params.jobId;
   try {
     const jobDetails = await prisma.job.findFirst({
       where: {

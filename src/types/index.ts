@@ -8,6 +8,7 @@ export enum JobStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
+  AWARDED='AWARDED'
 }
 
 export interface CreateJobData {
