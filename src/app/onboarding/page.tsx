@@ -11,7 +11,7 @@ const OnboardingPage: React.FC = () => {
   const router = useRouter();
 
   const [selectedRole, setSelectedRole] = useState<'CLIENT' | 'FREELANCER' | null>(null);
-  const [freelancerSkills, setFreelancerSkills] = useState<string>(''); // Comma-separated skills
+  const [freelancerSkills, setFreelancerSkills] = useState<string>(''); 
   const [freelancerBio, setFreelancerBio] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +43,7 @@ const OnboardingPage: React.FC = () => {
       if (selectedRole === 'CLIENT') {
         router.push('/dashboard'); 
       } else if (selectedRole === 'FREELANCER') {
-        router.push('/freelancer/browse-jobs'); 
+        router.push('/browse-jobs'); 
       }
 
     } catch (err: any) {

@@ -13,9 +13,9 @@ export default async function Home() {
 
     if (dbUser) {
       if (dbUser.role === UserRole.CLIENT) {
-        redirect("/client/dashboard");
+        redirect("/dashboard");
       } else if (dbUser.role === UserRole.FREELANCER) {
-        redirect("/freelancer/dashboard");
+        redirect("/dashboard");
       }
     } else {
       redirect("/onboarding");
