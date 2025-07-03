@@ -11,7 +11,7 @@ interface JobDetailsPageProps {
 }
 
 export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
-  const { jobId } = await params;
+  const  jobId  = params.jobId;
 
   // 1. Server-side authentication and authorization
   const clerkUser = await currentUser();
