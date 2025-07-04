@@ -6,12 +6,13 @@ import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AssignedJobCard } from "@/components/freelancer/AssignedJobCard";
 import { ProposalCard } from "@/components/freelancer/ProposalCard";
+import { GetJobsResponse } from "@/types";
 
 export default function FreelancerDashboard() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["freelancer-dashboard"],
     queryFn: async () => {
-      const res = await axios.get("/api/freelancer/dashboard");
+      const res = await axios.get<GetJobsResponse>("/api/freelancer/dashboard");
       return res.data;
     },
   });
@@ -24,7 +25,7 @@ export default function FreelancerDashboard() {
       <section>
         <h2 className="text-xl font-semibold mb-4">Assigned Jobs</h2>
         <div className="grid gap-4">
-          {data.assignedJobs.map((job: any) => (
+          {data?.assignedJobs?.map((job: any) => (
             <AssignedJobCard key={job.id} job={job} />
           ))}
         </div>
@@ -33,7 +34,7 @@ export default function FreelancerDashboard() {
       <section>
         <h2 className="text-xl font-semibold mb-4">My Proposals</h2>
         <div className="grid gap-4">
-          {data.proposals.map((p: any) => (
+          {data?.proposals.map((p: any) => (
             <ProposalCard key={p.id} proposal={p} />
           ))}
         </div>

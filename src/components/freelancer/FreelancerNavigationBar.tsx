@@ -17,28 +17,28 @@ export default function FreelancerNavigationBar() {
         <NavigationMenuList className="flex space-x-8">
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link href="/client/dashboard" className="hover:underline">
+              <Link href="/freelancer/dashboard" className="hover:underline">
                 Dashboard
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link href="/client/dashbaord/my-applications" className="hover:underline">
+              <Link href="/freelancer/dashbaord/my-applications" className="hover:underline">
                My Applications
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link href="/client/dashboard/recommended-jobs" className="hover:underline">
+              <Link href="/freelancer/dashboard/recommended-jobs" className="hover:underline">
                 Recommended Jobs
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link href="/client/profile" className="hover:underline">
+              <Link href="/freelancer/profile" className="hover:underline">
                 Profile
               </Link>
             </NavigationMenuLink>
