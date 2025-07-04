@@ -1,6 +1,8 @@
 
 import { currentUser } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default async function ClientDashboardPage() {
   const clerkUser = await currentUser(); 
@@ -19,18 +21,18 @@ export default async function ClientDashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold text-blue-700 mb-3">Post a New Job</h2>
+          <h2 className="text-2xl font-semibold text-gray-700 mb-3">Post a New Job</h2>
           <p className="text-gray-600 mb-4">Have a project? Find the right freelancer for it.</p>
-          <a href="/jobs/post" className="inline-block bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-            Post Job
-          </a>
+          <Link href='/jobs/post' >
+          <Button variant={'outline'} className='hover:bg-gray-300'>Post Job</Button>
+          </Link>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold text-purple-700 mb-3">My Posted Jobs</h2>
+          <h2 className="text-2xl font-semibold text-gray-700 mb-3">My Posted Jobs</h2>
           <p className="text-gray-600 mb-4">View and manage your active and completed jobs.</p>
-          <a href="/jobs" className="inline-block bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition-colors">
-            View Jobs
-          </a>
+          <Link href='/dashboard/my-jobs' >
+          <Button variant={'outline'} className='hover:bg-gray-300'>View Jobs</Button>
+          </Link>
         </div>
       </div>
     </main>

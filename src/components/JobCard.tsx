@@ -14,6 +14,8 @@ import {
   AlertDialogCancel,
   AlertDialogAction
 } from "./ui/alert-dialog";
+import { Badge } from "./ui/badge";
+import { statusColorMap } from "@/constants/colors";
 
 interface JobCardProps {
   job: Job;
@@ -31,7 +33,9 @@ const JobCard: React.FC<JobCardProps> = ({ job, onDelete, isDeleting }) => {
       <CardContent className="flex-grow">
         <div className="flex justify-between items-center text-sm text-gray-500 mb-2">
           <span>Budget: ${job.budget.toFixed(2)}</span>
-          <span className="bg-green-500 rounded-1xl ">{job.status}</span>
+            <Badge variant="outline" className={statusColorMap[job.status]}>
+            {job.status}
+          </Badge>
         </div>
         <p className="text-xs text-gray-400">Posted on: {new Date(job.createdAt).toLocaleDateString()}</p>
         {job.requiredSkills && job.requiredSkills.length > 0 && (
