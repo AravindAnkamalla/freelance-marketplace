@@ -23,14 +23,14 @@ export default async function ClientDashboardPage() {
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-gray-700 mb-3">Post a New Job</h2>
           <p className="text-gray-600 mb-4">Have a project? Find the right freelancer for it.</p>
-          <Link href='/jobs/post' >
+          <Link href='/client/jobs/post' >
           <Button variant={'outline'} className='hover:bg-gray-300'>Post Job</Button>
           </Link>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-gray-700 mb-3">My Posted Jobs</h2>
           <p className="text-gray-600 mb-4">View and manage your active and completed jobs.</p>
-          <Link href='/dashboard/my-jobs' >
+          <Link href='/client/dashboard/my-jobs' >
           <Button variant={'outline'} className='hover:bg-gray-300'>View Jobs</Button>
           </Link>
         </div>

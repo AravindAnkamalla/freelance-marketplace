@@ -21,3 +21,9 @@ export const editJobFormSchema = z.object({
   requiredSkills: z.string().min(1, { message: 'Required Skills are required.' }),
   deadline: z.date().nullable().optional(), 
 });
+
+export const onboardingSchema = z.object({
+  role: z.enum(['CLIENT', 'FREELANCER']),
+  skills: z.string().optional(),
+  bio: z.string().optional(),
+});

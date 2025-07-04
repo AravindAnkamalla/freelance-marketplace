@@ -23,7 +23,7 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
   });
 
   if (!dbUser || dbUser.role !== UserRole.CLIENT) {
-    redirect('/dashboard'); 
+    redirect('/client/dashboard'); 
   }
 
 
@@ -40,7 +40,7 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
       <div className="container mx-auto p-6 text-center text-red-600">
         <h1 className="text-3xl font-bold mb-4">Job Not Found or Unauthorized Access</h1>
         <p>The job you are looking for does not exist or you do not have permission to view it.</p>
-        <a href="/my-jobs" className="mt-4 inline-block text-blue-600 hover:underline">Back to My Jobs</a>
+        <a href="/client/my-jobs" className="mt-4 inline-block text-blue-600 hover:underline">Back to My Jobs</a>
       </div>
     );
   }
@@ -77,14 +77,14 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
         </div>
 
         <div className="mt-8 pt-6 border-t border-gray-200 flex space-x-4">
-          <a href={`/jobs/${job.id}/edit`} className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors">
+          <a href={`/client/jobs/${job.id}/edit`} className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors">
             Edit Job
           </a>
           {/* Delete button will be a Client Component with useMutation */}
           <button className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
             Delete Job (Coming Soon)
           </button>
-          <a href="/dashboard/my-jobs" className="px-5 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
+          <a href="/client/dashboard/my-jobs" className="px-5 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
             Back to My Jobs
           </a>
         </div>

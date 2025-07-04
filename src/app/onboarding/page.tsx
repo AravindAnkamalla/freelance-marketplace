@@ -1,130 +1,147 @@
+"use client";
 
-'use client';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
-import React, { useState } from 'react';
-import { useUser } from '@clerk/nextjs';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { onboardingSchema } from "@/validations/form-validation/job-form.validation";
+import { BriefcaseIcon, CodeIcon } from "lucide-react";
 
-const OnboardingPage: React.FC = () => {
+type OnboardingFormValues = z.infer<typeof onboardingSchema>;
+
+export default function OnboardingPage() {
   const { user } = useUser();
   const router = useRouter();
 
-  const [selectedRole, setSelectedRole] = useState<'CLIENT' | 'FREELANCER' | null>(null);
-  const [freelancerSkills, setFreelancerSkills] = useState<string>(''); 
-  const [freelancerBio, setFreelancerBio] = useState<string>('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<OnboardingFormValues>({
+    resolver: zodResolver(onboardingSchema),
+    defaultValues: {
+      role: undefined,
+      skills: "",
+      bio: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user || !selectedRole) {
-      setError('Please select a role.');
-      return;
+  const role = watch("role");
+
+  const onSubmit = async (values: OnboardingFormValues) => {
+    if (!user) return;
+
+    const payload: any = {
+      role: values.role,
+      email: user.emailAddresses?.[0]?.emailAddress,
+    };
+
+    if (values.role === "FREELANCER") {
+      payload.skills = values.skills
+        ?.split(",")
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+      payload.bio = values.bio;
     }
 
-    setLoading(true);
-    setError(null);
-
     try {
-      const payload: any = {
-        role: selectedRole,
-        email: user.emailAddresses?.[0]?.emailAddress, 
-      };
+      await axios.post("/api/onboard-user", payload);
 
-      if (selectedRole === 'FREELANCER') {
-        payload.skills = freelancerSkills.split(',').map(s => s.trim()).filter(s => s.length > 0);
-        payload.bio = freelancerBio;
-
-      }
-
-      await axios.post('/api/onboard-user', payload);
-
-      if (selectedRole === 'CLIENT') {
-        router.push('/dashboard'); 
-      } else if (selectedRole === 'FREELANCER') {
-        router.push('/browse-jobs'); 
-      }
-
-    } catch (err: any) {
-      console.error('Onboarding failed:', err);
-      setError(err.response?.data?.message || 'Failed to onboard. Please try again.');
-    } finally {
-      setLoading(false);
+      router.push(
+        values.role === "CLIENT" ? "/client/dashboard" : "/freelancer/dashboard/browse-jobs"
+      );
+    } catch (error: any) {
+      console.error("Onboarding failed:", error);
+      alert("Failed to onboard. Please try again.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Welcome! Select Your Role</h1>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">I am a:</label>
-            <div className="flex justify-around space-x-4">
-              <button
-                type="button"
-                onClick={() => setSelectedRole('CLIENT')}
-                className={`flex-1 py-3 px-4 rounded-lg text-center font-semibold transition-colors duration-200 ${
-                  selectedRole === 'CLIENT' ? 'bg-blue-600 text-white shadow-lg' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                }`}
-              >
-                Client
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedRole('FREELANCER')}
-                className={`flex-1 py-3 px-4 rounded-lg text-center font-semibold transition-colors duration-200 ${
-                  selectedRole === 'FREELANCER' ? 'bg-green-600 text-white shadow-lg' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                }`}
-              >
-                Freelancer
-              </button>
-            </div>
-          </div>
-
-          {selectedRole === 'FREELANCER' && (
-            <div className="space-y-4 pt-4 border-t border-gray-200 mt-6">
-              <h2 className="text-xl font-bold">Freelancer Profile</h2>
-              <div>
-                <label htmlFor="freelancerBio" className="block text-sm font-medium text-gray-700">Tell us about yourself (Bio)</label>
-                <textarea
-                  id="freelancerBio"
-                  value={freelancerBio}
-                  onChange={(e) => setFreelancerBio(e.target.value)}
-                  rows={4}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  placeholder="e.g., A passionate React developer with 5 years of experience..."
-                ></textarea>
+    <div className="flex justify-center items-center min-h-screen bg-muted">
+      <Card className="w-full max-w-md shadow-xl">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl">
+            Welcome! Select Your Role
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-2">
+              {/* <Label>I am a:</Label> */}
+              <div className="flex gap-4">
+                <Button
+                  type="button"
+                  variant={role === "CLIENT" ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setValue("role", "CLIENT")}
+                >
+                  <BriefcaseIcon className="w-4 h-4" />
+                  Client
+                </Button>
+                <Button
+                  type="button"
+                  variant={role === "FREELANCER" ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setValue("role", "FREELANCER")}
+                >
+                  {" "}
+                  <CodeIcon className="w-4 h-4" />
+                  Freelancer
+                </Button>
               </div>
-              <div>
-                <label htmlFor="freelancerSkills" className="block text-sm font-medium text-gray-700">Skills (comma-separated)</label>
-                <input
-                  type="text"
-                  id="freelancerSkills"
-                  value={freelancerSkills}
-                  onChange={(e) => setFreelancerSkills(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  placeholder="e.g., React, TypeScript, Tailwind CSS, Node.js"
-                />
-              </div>
-              {/* Add more freelancer fields here (e.g., hourly rate, portfolio links) */}
+              {errors.role && (
+                <p className="text-sm text-red-500">{errors.role.message}</p>
+              )}
             </div>
-          )}
 
-          <button
-            type="submit"
-            className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            disabled={!selectedRole || loading}
-          >
-            {loading ? 'Saving...' : 'Continue'}
-          </button>
-        </form>
-      </div>
+            {role === "FREELANCER" && (
+              <div className="space-y-4 border-t pt-6">
+                <h2 className="text-lg font-semibold">Freelancer Profile</h2>
+
+                <div className="space-y-2">
+                  <Label htmlFor="bio">Bio</Label>
+                  <Textarea
+                    id="bio"
+                    {...register("bio")}
+                    placeholder="Tell us about yourself..."
+                  />
+                  {errors.bio && (
+                    <p className="text-sm text-red-500">{errors.bio.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="skills">Skills (comma-separated)</Label>
+                  <Input
+                    id="skills"
+                    {...register("skills")}
+                    placeholder="React, TypeScript, Tailwind CSS"
+                  />
+                  {errors.skills && (
+                    <p className="text-sm text-red-500">
+                      {errors.skills.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Saving..." : "Continue"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-export default OnboardingPage;
+}

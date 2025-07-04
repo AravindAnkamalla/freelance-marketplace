@@ -1,21 +1,21 @@
-import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/db";
 
 import { UserRole } from "@/types/index";
+import { auth } from "@clerk/nextjs/server";
 export default async function Home() {
-  const user = await currentUser();
+  const { userId } = await auth();
 
-  if (user) {
+  if (userId) {
     const dbUser = await prisma.user.findUnique({
-      where: { clerkId: user.id },
+      where: { clerkId: userId },
     });
 
     if (dbUser) {
       if (dbUser.role === UserRole.CLIENT) {
-        redirect("/dashboard");
+        redirect("/client/dashboard");
       } else if (dbUser.role === UserRole.FREELANCER) {
-        redirect("/dashboard");
+        redirect("/freelancer/dashboard");
       }
     } else {
       redirect("/onboarding");

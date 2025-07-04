@@ -109,7 +109,7 @@ const EditJobPage: React.FC<EditJobPageProps> = ({ params }) => {
       setFormMessage({ type: "success", text: "Job updated successfully!" });
       
       setTimeout(() => {
-        router.push(`/jobs/${jobId}`);
+        router.push(`/client/jobs/${jobId}`);
       }, 1000);
     },
     onError: (err: any) => {
@@ -327,7 +327,7 @@ const EditJobPage: React.FC<EditJobPageProps> = ({ params }) => {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.push(`/jobs/${jobId}`)}
+                onClick={() => router.push(`/client/jobs/${jobId}`)}
               >
                 Cancel
               </Button>

@@ -40,8 +40,8 @@ export async function DELETE(
       where: { id: params.jobId },
     });
 
-    revalidatePath("/dashboard/my-jobs");
-    revalidatePath("/freelancer/browse-jobs");
+    revalidatePath("/client/dashboard/my-jobs");
+    revalidatePath("/freelancer/dashboard/browse-jobs");
 
     return new NextResponse("Job deleted successfully", { status: 200 });
   } catch (error) {
@@ -105,8 +105,8 @@ export async function PATCH(
       },
     });
 
-    revalidatePath(`/dashboard/my-jobs`);
-    revalidatePath(`/jobs/${jobId}`);
+    revalidatePath(`/client/dashboard/my-jobs`);
+    revalidatePath(`/client/jobs/${jobId}`);
 
     return NextResponse.json(updatedJob);
   } catch (error) {

@@ -16,5 +16,6 @@ export interface CreateJobData {
   description: string;
   budget: number;
   requiredSkills: string[];
-  deadline?: Date; // Optional field
+  deadline?: Date; 
 }
+

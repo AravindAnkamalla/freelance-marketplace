@@ -1,35 +1,37 @@
+
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/db";
-import { UserRole } from "@/types/index";
-
-
+import { UserRole } from "@prisma/client"; 
 
 export async function POST(req: Request) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth(); 
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const body = await req.json();
-    const { clerkId, email, name, profilePicture, role } = body;
+    const {
+      email,
+      name,
+      profilePicture,
+      role,
+      skills,
+      bio,
+      hourlyRate,
+    } = body;
 
-    if (
-      !clerkId ||
-      !email ||
-      !role ||
-      (role !== UserRole.CLIENT && role !== UserRole.FREELANCER)
-    ) {
+    if (!email || !role || !Object.values(UserRole).includes(role)) {
       return new NextResponse("Invalid request data", { status: 400 });
     }
 
     const existingUser = await prisma.user.findUnique({
-      where: { clerkId: clerkId },
+      where: { clerkId: userId },
     });
 
-    if (existingUser && existingUser.role) {
+    if (existingUser?.role) {
       return NextResponse.json(
         { message: "User already onboarded." },
         { status: 200 }
@@ -37,29 +39,41 @@ export async function POST(req: Request) {
     }
 
     const user = await prisma.user.upsert({
-      where: { clerkId: clerkId },
+      where: { clerkId: userId },
       update: {
-        email: email,
-        name: name,
-        profilePicture: profilePicture,
-        role: role,
+        email,
+        name,
+        profilePicture,
+        role,
+        skills: role === "FREELANCER" ? skills || [] : [],
+        bio: role === "FREELANCER" ? bio || null : null,
+        hourlyRate:
+          role === "FREELANCER" && hourlyRate
+            ? parseFloat(hourlyRate)
+            : null,
       },
       create: {
-        clerkId: clerkId,
-        email: email,
-        name: name,
-        profilePicture: profilePicture,
-        role: role,
+        clerkId: userId,
+        email,
+        name,
+        profilePicture,
+        role,
         balance: 0,
+        skills: role === "FREELANCER" ? skills || [] : [],
+        bio: role === "FREELANCER" ? bio || null : null,
+        hourlyRate:
+          role === "FREELANCER" && hourlyRate
+            ? parseFloat(hourlyRate)
+            : null,
       },
     });
 
     return NextResponse.json(
       { message: "User onboarded successfully", user },
-      { status: 200 }
+      { status: 201 }
     );
   } catch (error) {
-    console.error("Error onboarding user:", error);
+    console.error("[API/ONBOARD_USER_POST] Error onboarding user:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

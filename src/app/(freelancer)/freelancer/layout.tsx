@@ -3,7 +3,8 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation'; 
 import prisma from '@/lib/db';
 import { UserRole } from "@/types/index";
-import ClientNavigationBar from '@/components/ui/ClientNavigationBar';
+import FreelancerNavigationBar from '@/components/freelancer/FreelancerNavigationBar';
+
 
 
 export default async function ClientLayout({
@@ -24,7 +25,7 @@ export default async function ClientLayout({
   });
 
 
-  if (!dbUser || dbUser.role !== UserRole.CLIENT) {
+  if (!dbUser || dbUser.role !== UserRole.FREELANCER) {
     
     redirect('/');
   }
@@ -33,7 +34,7 @@ export default async function ClientLayout({
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <ClientNavigationBar/> 
+      <FreelancerNavigationBar/> 
       <div className="container mx-auto p-4 py-8">
         {children} 
       </div>

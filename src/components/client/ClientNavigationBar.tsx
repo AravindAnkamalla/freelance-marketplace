@@ -1,3 +1,4 @@
+"use client";
 
 import Link from "next/link";
 import {
@@ -6,6 +7,8 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
+import { SignOutButton } from "@clerk/nextjs";
+
 
 export default function ClientNavigationBar() {
   return (
@@ -14,38 +17,40 @@ export default function ClientNavigationBar() {
         <NavigationMenuList className="flex space-x-8">
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link href="/dashboard" className="hover:underline">
+              <Link href="/client/dashboard" className="hover:underline">
                 Dashboard
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link href="/jobs/post" className="hover:underline">
+              <Link href="/client/jobs/post" className="hover:underline">
                 Post a Job
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link href="/dashboard/my-jobs" className="hover:underline">
+              <Link href="/client/dashboard/my-jobs" className="hover:underline">
                 My Jobs
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link href="/profile" className="hover:underline">
+              <Link href="/client/profile" className="hover:underline">
                 Profile
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-              <Link href="/sign-out" className="hover:underline">
-                Sign Out
-              </Link>
-            </NavigationMenuLink>
+            <SignOutButton>
+              <NavigationMenuLink asChild>
+                <span className="cursor-pointer hover:underline">
+                  Sign Out
+                </span>
+              </NavigationMenuLink>
+            </SignOutButton>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

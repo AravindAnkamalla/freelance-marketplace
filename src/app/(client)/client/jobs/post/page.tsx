@@ -55,7 +55,7 @@ export default function PostJobPage() {
       form.reset();
       setFormMessage({ type: 'success', text: 'Job posted successfully!' });
       setTimeout(() => {
-        router.push('/dashboard/my-jobs');
+        router.push('/client/dashboard/my-jobs');
       }, 1000);
     },
     onError: (error: any) => {
